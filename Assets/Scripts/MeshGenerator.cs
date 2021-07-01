@@ -16,12 +16,14 @@ public class MeshGenerator : MonoBehaviour
     void Start()
     {
         mesh = GetComponent<MeshFilter>().mesh;
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         GenerateShape();
         CreateMesh();
     }
 
     void GenerateShape()
     {
+        radius /= 2; //I have no clue why this happens but my sphere is double sized
         vertices.Add(new Vector3(-radius/2, -radius, 0).normalized * radius);
         vertices.Add(new Vector3(-radius/2, radius, 0).normalized * radius);
         vertices.Add(new Vector3(radius/2, radius, 0).normalized * radius);
@@ -85,6 +87,7 @@ public class MeshGenerator : MonoBehaviour
     {
         // ok so what I should do is separate each triangle into four triangles by adding 3 new vertices, I should remove the earlier triangle from the list
         // the points should be on the edge of imaginary sphere
+        print(mesh.subMeshCount + " SUBMESHES");
         for (int iteration = 0; iteration < iterations; iteration++)
         {
             var ti = 0;
@@ -123,5 +126,10 @@ public class MeshGenerator : MonoBehaviour
         mesh.vertices = v;
         mesh.triangles = t;
         mesh.RecalculateNormals();
+    }
+
+    private float GetRandom()
+    {
+           return Random.Range(-1f, 1f);
     }
 }
